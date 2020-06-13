@@ -63,6 +63,7 @@ jobs:
       - image: google/cloud-sdk
     steps:
       - run: |
+          head ./requirements.txt
           echo "Deploying to Google Cloud..."
           gcloud --quiet config set project msds-434-project-275301
           gcloud --quiet config set compute/zone us-east1-b
