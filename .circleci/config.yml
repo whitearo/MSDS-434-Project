@@ -46,15 +46,25 @@ jobs:
       #      . venv/bin/activate
       #      make test
     
-      - deploy:
-          name: Push application Docker image
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo "Deploying to Google Cloud..."
-              # gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-              sudo gcloud --quiet config set project msds-434-project-275301
-              gcloud --quiet config set compute/zone us-east1-b
-              gcloud --quiet components update app      
-              gcloud -q app deploy final_project/* --project=MSDS-434-Project
-            fi
+      #- deploy:
+      #    name: Push application Docker image
+      #    command: |
+      #      if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #        echo "Deploying to Google Cloud..."
+      #        # gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+      #        sudo gcloud --quiet config set project msds-434-project-275301
+      #        gcloud --quiet config set compute/zone us-east1-b
+      #        gcloud --quiet components update app      
+      #        gcloud -q app deploy final_project/* --project=MSDS-434-Project
+      #      fi
+
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - run: |
+          echo "Deploying to Google Cloud..."
+          gcloud --quiet config set project msds-434-project-275301
+          gcloud --quiet config set compute/zone us-east1-b
+          gcloud -q app deploy final_project/* --project=MSDS-434-Project
 
