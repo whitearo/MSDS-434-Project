@@ -1,58 +1,48 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
-version: 2
-jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.6.1
-      
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
+# Copyright 2015, Google, Inc.
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable
+# law or agreed to in writing, software distributed under the License is distributed
+# on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied. See the License for the specific language governing permissions and
+# limitations under the License.
 
-    working_directory: ~/repo
+machine:
+  environment:
+    # Add app engine sdk to pythonpath for local unit tests.
+    # PYTHONPATH: ${PYTHONPATH}:${HOME}/google_appengine
+    # Replace this with your project ID
+    GCLOUD_PROJECT: "msds-434-project-275301"
 
-    steps:
-      - checkout
+dependencies:
+  pre:
+    # Download App Engine SDK
+    # This is not necessary to deploy, its only necessary  to run local tests importing the App Engine SDK
+    # - curl -o $HOME/google_appengine_1.9.30.zip https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.30.zip
+    # - unzip -q -d $HOME $HOME/google_appengine_1.9.30.zip
+    # Retrieve our secrets from the CircleCI environment
+    #- echo $CLIENT_SECRET | base64 --decode > ${HOME}/client-secret.json
+    #- sed  s/YOUR-API-KEY/$API_KEY/ api_key.py.sample > api_key.py
+    # vendor our dependencies
+    - mkdir -p lib
+    - pip install -r requirements.txt -t lib
+    # Make sure gcloud is up to date
+    - gcloud --quiet components update app
+    # authenticate gcloud
+    #- gcloud auth activate-service-account --key-file ${HOME}/client-secret.json
+    # Replace <your-project-id>
+    - gcloud config set project msds-434-project-275301
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+test:
+  override:
+    # run local unit tests
+    # - python test_main.py
 
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-        
-      # run tests!
-      # - run:
-      #     name: run tests
-      #    command: |
-      #      . venv/bin/activate
-      #      make test
-    
-      - deploy:
-          name: Push application Docker image
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo "Deploying to Google Cloud..."
-              # gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-              gcloud --quiet config set project msds-434-project-275301
-              gcloud --quiet config set compute/zone us-east1-b      
-              gcloud -q app deploy final_project/* --project=MSDS-434-Project
-            fi
-
+deployment:
+    staging:
+        branch: master
+        commands:
+        # deploy to AppEngine
+        - gcloud -q app deploy final_project/* --promote --version=1
+        # Run our E2E Test
+        # - python e2e_test.py
