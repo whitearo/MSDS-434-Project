@@ -63,6 +63,7 @@ jobs:
       - image: google/cloud-sdk
     steps:
       - run: |
+          dir $CIRCLE_WORKING_DIRECTORY
           head ./requirements.txt
           echo "Deploying to Google Cloud..."
           gcloud --quiet config set project msds-434-project-275301
