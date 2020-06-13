@@ -4,66 +4,13 @@
 #
 version: 2
 jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.6.1
-      
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-        
-      # run tests!
-      # - run:
-      #     name: run tests
-      #    command: |
-      #      . venv/bin/activate
-      #      make test
-    
-      #- deploy:
-      #    name: Push application Docker image
-      #    command: |
-      #      if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #        echo "Deploying to Google Cloud..."
-      #        # gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-      #        sudo gcloud --quiet config set project msds-434-project-275301
-      #        gcloud --quiet config set compute/zone us-east1-b
-      #        gcloud --quiet components update app      
-      #        gcloud -q app deploy final_project/* --project=MSDS-434-Project
-      #      fi
-
   deploy:
     docker:
       - image: google/cloud-sdk
     steps:
       - run: |
           echo "Deploying to Google Cloud..."
+          gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
           gcloud --quiet config set project msds-434-project-275301
           gcloud --quiet config set compute/zone us-east1-b
           gcloud -q app deploy final_project/* --project=MSDS-434-Project
