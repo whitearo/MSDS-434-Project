@@ -1,0 +1,4 @@
+cron:
+- description: "Batch Update bq job in 24 hours"
+  url: /
+  schedule: every 24 hours
