@@ -66,7 +66,7 @@ jobs:
           echo "Deploying to Google Cloud..."
           gcloud --quiet config set project msds-434-project-275301
           gcloud --quiet config set compute/zone us-east1-b
-          gcloud auth activate-service-account --key-file msds-434-project-key.json
+          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
           gcloud -q app deploy final_project/* --project=msds-434-project-275301
 
 workflows:
