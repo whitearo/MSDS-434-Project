@@ -52,7 +52,7 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo "Deploying to Google Cloud..."
               # gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-              gcloud --quiet config set project msds-434-project-275301
+              sudo gcloud --quiet config set project msds-434-project-275301
               gcloud --quiet config set compute/zone us-east1-b
               gcloud --quiet components update app      
               gcloud -q app deploy final_project/* --project=MSDS-434-Project
