@@ -66,7 +66,7 @@ jobs:
           echo "Deploying to Google Cloud..."
           gcloud --quiet config set project msds-434-project-275301
           gcloud --quiet config set compute/zone us-east1-b
-          gcloud -q app deploy final_project/* --project=MSDS-434-Project
+          gcloud -q app deploy final_project/* --project=msds-434-project-275301
 
 workflows:
   version: 2
