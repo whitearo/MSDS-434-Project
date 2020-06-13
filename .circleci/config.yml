@@ -56,7 +56,7 @@ jobs:
               gcloud auth activate-service-account --key-file ./msds-434-project-key.json
               gcloud --quiet config set project msds-434-project-275301
               gcloud --quiet config set compute/zone us-east1-b
-              gcloud -q app deploy final_project/* --project=msds-434-project-275301
+              gcloud -q app deploy ./final_project/* --project=msds-434-project-275301
             fi
 
   deploy:
