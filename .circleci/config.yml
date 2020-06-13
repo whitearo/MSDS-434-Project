@@ -68,9 +68,9 @@ jobs:
           gcloud --quiet config set compute/zone us-east1-b
           gcloud -q app deploy final_project/* --project=MSDS-434-Project
 
- workflows:
-   version: 2
-   build_and_deploy: # this is the name of our workflow
-     jobs: # and here we list the jobs we are going to run.
-       - build
-       - deploy
+workflows:
+  version: 2
+  build_and_deploy: # this is the name of our workflow
+    jobs: # and here we list the jobs we are going to run.
+      - build
+      - deploy
