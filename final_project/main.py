@@ -11,13 +11,6 @@ from google.appengine.ext.webapp import util
 
 app = Flask(__name__)
 
-class MyHandler(webapp.RequestHandler):
-    def get(self):
-        #housing_units = self.request.get_all("housing_units")
-        #median_income = self.request.get_all("median_income")
-        #self.response.out.write(housing_units + ',' + median_income)
-        return "parameters:" #+ housing_units + ',' + median_income
-
 
 @app.route('/')
 def root():
@@ -26,6 +19,14 @@ def root():
     #x = MyHandler()
     #return x.get() 
     return "hello world"
+
+
+class MyHandler(webapp.RequestHandler):
+    def get(self):
+        #housing_units = self.request.get_all("housing_units")
+        #median_income = self.request.get_all("median_income")
+        #self.response.out.write(housing_units + ',' + median_income)
+        return "parameters:" #+ housing_units + ',' + median_income
 
 
 if __name__ == '__main__':
