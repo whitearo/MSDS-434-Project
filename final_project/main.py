@@ -5,8 +5,8 @@
 # [START gae_python37_app]
 from flask import Flask
 from google.cloud import bigquery
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import util
+#from google.appengine.ext import webapp
+#from google.appengine.ext.webapp import util
 
 
 app = Flask(__name__)
@@ -14,8 +14,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
-    application = webapp.WSGIApplication([('/', MyHandler)], debug=True)
-    util.run_wsgi_app(application)
+    #application = webapp.WSGIApplication([('/', MyHandler)], debug=True)
+    #util.run_wsgi_app(application)
     #x = MyHandler()
     #return x.get() 
     return "hello world"
