@@ -47,7 +47,6 @@ def update_bigquery():
                       '\"Floor\":' + str(row.floor) + ',\n' + \
                       '\"Rooms\":' + str(row.rooms) + ',\n' + \
                       '\"Place_name\":' + row.place_name + '\n}' + '\n'
-        break
     return json_result
 
 
