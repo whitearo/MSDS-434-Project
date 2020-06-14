@@ -3,7 +3,7 @@
 # batch update bigquery from imported csv
 
 # [START gae_python37_app]
-from flask import Flask
+from flask import Flask, jsonify, request
 #from google.cloud import bigquery
 
 app = Flask(__name__)
