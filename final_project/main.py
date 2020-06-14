@@ -5,50 +5,26 @@
 # [START gae_python37_app]
 from flask import Flask
 from google.cloud import bigquery
+from google.appengine.ext import webapp
+from google.appengine.ext.webapp import util
 
 
 app = Flask(__name__)
 
+class MainHandler(webapp.RequestHandler):
+    def get(self):
+        housing_units = self.request.get_all("housing_units")
+        median_income = self.request.get_all("median_income")
+        #self.response.out.write(housing_units + ',' + median_income)
+        return "parameters:" + housing_units + ',' + median_income
+
 
 @app.route('/')
-def update_bigquery():
-    # Create bigquery connection
-    client = bigquery.Client()
-    # Set up data to be imported
-    # Perform a query.
-    QUERY = (
-        'SELECT source.price, predicted_price, \
-            results.place_name, results.floor, \
-            results.rooms, results.surface_total, results.surface_covered \
-        FROM \
-            `msds-434-project-275301.real_estate_analysis.br_201501` AS source\
-        INNER JOIN \
-        ML.PREDICT(MODEL `real_estate_analysis.properties_br_model`,\
-        (\
-            SELECT id, place_name, \
-                IFNULL(floor,0) AS floor, \
-                IFNULL(rooms,0) AS rooms, \
-                IFNULL(surface_total,0) AS surface_total, \
-                IFNULL(surface_covered,0) AS surface_covered \
-            FROM `msds-434-project-275301.real_estate_analysis.br_201501`\
-            WHERE price > 0 \
-                AND floor > 0 AND rooms > 0 \
-                AND surface_total > 0 \
-                AND surface_covered > 0)) AS results \
-        ON source.id = results.id')
-
-    query_job = client.query(QUERY)  # API request
-    rows = query_job.result()  # Waits for query to finish
-
-    json_result = ''
-    for row in rows:
-        json_result = json_result + '{\n\"Price\":' + str(row.price) + ',\n' + \
-                      '\"Predicted_price\":' + str(row.predicted_price) + ',\n' + \
-                      '\"Floor\":' + str(row.floor) + ',\n' + \
-                      '\"Rooms\":' + str(row.rooms) + ',\n' + \
-                      '\"Place_name\":' + row.place_name + '\n}' + '\n'
-        break
-    return json_result
+def main():
+    application = webapp.WSGIApplication([('/', MainHandler)], debug=True)
+    util.run_wsgi_app(application)
+    x = MyHandler()
+    return x.get() 
 
 
 if __name__ == '__main__':
@@ -56,18 +32,4 @@ if __name__ == '__main__':
     # Engine, a webserver process such as Gunicorn will serve the app. This
     # can be configured by adding an `entrypoint` to app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument(
-        '--launch-browser',
-        help='Use a local server flow to authenticate. ',
-        action='store_true')
-    parser.add_argument('project', help='Project to use for BigQuery billing.')
-
-    args = parser.parse_args()
-
-    main(
-        args.project, launch_browser=args.launch_browser)
-        
 # [END gae_python37_app]
