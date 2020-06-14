@@ -11,17 +11,17 @@ from google.appengine.ext.webapp import util
 
 app = Flask(__name__)
 
-class MainHandler(webapp.RequestHandler):
+class MyHandler(webapp.RequestHandler):
     def get(self):
-        housing_units = self.request.get_all("housing_units")
-        median_income = self.request.get_all("median_income")
+        #housing_units = self.request.get_all("housing_units")
+        #median_income = self.request.get_all("median_income")
         #self.response.out.write(housing_units + ',' + median_income)
-        return "parameters:" + housing_units + ',' + median_income
+        return "parameters:" #+ housing_units + ',' + median_income
 
 
 @app.route('/')
 def main():
-    application = webapp.WSGIApplication([('/', MainHandler)], debug=True)
+    application = webapp.WSGIApplication([('/', MyHandler)], debug=True)
     util.run_wsgi_app(application)
     x = MyHandler()
     return x.get() 
