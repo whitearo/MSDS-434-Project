@@ -23,14 +23,15 @@ class MyHandler(webapp.RequestHandler):
 def root():
     application = webapp.WSGIApplication([('/', MyHandler)], debug=True)
     util.run_wsgi_app(application)
-    x = MyHandler()
-    return x.get() 
+    #x = MyHandler()
+    #return x.get() 
+    return "hello world"
 
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. This
     # can be configured by adding an `entrypoint` to app.yaml.
-    #app.run(host='127.0.0.1', port=8080, debug=True)
-    root()
+    app.run(host='127.0.0.1', port=8080, debug=True)
+    #root()
 # [END gae_python37_app]
